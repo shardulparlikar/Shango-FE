@@ -1,7 +1,9 @@
 import type { RouteRecordRaw } from 'vue-router'
 import Login from '../components/Login.vue'
-import RecruiterSignUp from '../recruiter/RecruiterSignUp.vue'
-import TalentSignUp from '../talent/TalentSignUp.vue'
+import RecruiterHomePage from '../recruiter/RecruiterSignUp.vue'
+import TalentHomePage from '../talent/TalentSignUp.vue'
+import SignUp from '../components/SignUp.vue'
+
 
 const routes: RouteRecordRaw[] = [
   {
@@ -9,27 +11,32 @@ const routes: RouteRecordRaw[] = [
     name: 'login',
     component: Login,
   },
+  {
+    path: '/signUp',
+    name: 'signUp',
+    component: SignUp,
+  },
   // Recruiter routes
   {
     path: '/recruiter',
-    redirect: { name: 'recruiterSignUp' },
+    redirect: { name: 'RecruiterHomePage' },
     children: [
       {
-        path: 'sign-up', 
-        name: 'recruiterSignUp',
-        component: RecruiterSignUp,
+        path: 'homePage',
+        name: 'RecruiterHomePage',
+        component: RecruiterHomePage,
       },
     ],
   },
   // Talent routes
   {
     path: '/talent',
-    redirect: { name: 'talentSignUp' },
+    redirect: { name: 'TalentHomePage' },
     children: [
       {
-        path: 'sign-up',
-        name: 'talentSignUp',
-        component: TalentSignUp,
+        path: 'homePage',
+        name: 'TalentHomePage',
+        component: TalentHomePage,
       },
     ],
   },

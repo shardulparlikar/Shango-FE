@@ -7,6 +7,3 @@ import { ref } from 'vue'
 
 const msg = ref('Login')
 </script>
-
-<style scoped>
-</style>
