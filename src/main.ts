@@ -10,18 +10,18 @@ import { definePreset } from '@primeuix/themes';
 const customTheme = definePreset(Aura, {
   semantic: {
     primary: {
-      50: '{amber.50}',
-      100: '{amber.100}',
-      200: '{amber.200}',
-      300: '{amber.300}',
-      400: '{amber.400}',
-      500: '{amber.500}',
-      600: '{amber.600}',
-      700: '{amber.700}',
-      800: '{amber.800}',
-      900: '{amber.900}',
-      950: '{amber.950}'
-    },
+      50: '#FFF7E6',
+      100: '#FFE6B8',
+      200: '#FFD38A',
+      300: '#FFC15C',
+      400: '#EAA505', // main Recruiter color
+      500: '#EAA505',
+      600: '#B87700',
+      700: '#9D6100',
+      800: '#814900',
+      900: '#663500',
+      950: '#4D2600'
+    }
   }
 });
 

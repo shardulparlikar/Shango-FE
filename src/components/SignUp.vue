@@ -1,8 +1,8 @@
 <template>
   <div :class="['background', isRecruiter ? 'bg-recruiter' : 'bg-talent']">
-    <div class="login-container flex items-center">
+    <!-- <div class="login-container flex items-center"> -->
       <!-- Email Step -->
-      <div v-if="emailStep">
+      <div v-if="emailStep" class="login-container">
         <Card class="bg-white rounded-2xl w-full">
           <template #title>
             <h2 class="text-2xl font-semibold flex justify-center mb-4 p-4">Créer un compte</h2>
@@ -27,9 +27,20 @@
                   v-model="email"
                   placeholder="Entrez votre adresse mail"
                   class="w-full"
+                  type="email"
+                  :class="{ 'p-invalid': emailError && emailTouched }"
+                  @blur="emailTouched = true"
                 />
+                <small v-if="emailError && emailTouched" class="p-error block mt-2">
+                  {{ emailError }}
+                </small>
               </div>
-              <Button label="Login" class="w-full mt-2" :onClick="() => setStep('otp')" >
+              <Button 
+                label="Suivant" 
+                class="w-full mt-2" 
+                :onClick="handleNext"
+                :disabled="!isEmailValid"
+              >
                 Suivant
               </Button>
             </div>
@@ -39,9 +50,10 @@
       <!-- otp step -->
       <OtpCard v-else-if="otpStep" :email="email" @onBack="() => setStep('email')"  @onNext="() => setStep('password')"/>
       <!-- password step -->
-      <div v-else-if="passwordStep"> hiiiiiiiii</div>
+      <PasswordManager :email="email" @onSubmit="setStep('last')" v-else-if="passwordStep"> </PasswordManager>
       <!-- last step -->
-    </div>
+      <ThankYouPage v-else-if="lastStep"></ThankYouPage>
+    <!-- </div> -->
   </div>
 </template>
 
@@ -52,7 +64,10 @@ import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import SelectButton from 'primevue/selectbutton'
 import OtpCard from './OtpCard.vue'
+import PasswordManager from './PasswordManager.vue'
+import ThankYouPage from './ThankYouPage.vue'
 import { useGlobalStore } from '../store/globalStore'
+import { authService } from '../services/authServices'
 
 const globalStore = useGlobalStore()
 
@@ -62,6 +77,7 @@ type ToggleOption = {
 }
 
 const email = ref<string>('')
+const emailTouched = ref<boolean>(false)
 const toggleValue = ref<'recruteur' | 'talent'>('recruteur')
 const toggleOptions = ref<ToggleOption[]>([
   { label: 'Je suis un recruteur', value: 'recruteur' },
@@ -74,20 +90,58 @@ const lastStep = ref<boolean>(false)
 
 const isRecruiter = computed<boolean>(() => toggleValue.value === 'recruteur')
 
-const setStep = (step: 'email' | 'otp' | 'password'): void => {
+// Email validation
+const isEmailValid = computed<boolean>(() => {
+  if (!email.value) return false
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email.value)
+})
+
+const emailError = computed<string>(() => {
+  if (!email.value) {
+    return 'L\'adresse e-mail est requise'
+  }
+  if (!isEmailValid.value) {
+    return 'Veuillez entrer une adresse e-mail valide'
+  }
+  return ''
+})
+
+const handleNext = async () => {
+  emailTouched.value = true
+  if (isEmailValid.value) {
+    const res = await authService.login({ contact: email.value })
+    setStep('otp')
+  }
+}
+
+const setStep = (step: 'email' | 'otp' | 'password' | 'last'): void => {
   // reset all steps first
   emailStep.value = false
   otpStep.value = false
   passwordStep.value = false
 
   // activate the chosen step
-  if (step === 'email') emailStep.value = true
-  if (step === 'otp') otpStep.value = true
-  if (step === 'password') passwordStep.value = true
+  if (step === 'email') {
+    emailStep.value = true
+    emailTouched.value = false // Reset touched state when going back
+  }
+  if (step === 'otp') {
+    otpStep.value = true
+    emailStep.value = false
+  }
+  if (step === 'password') {
+    otpStep.value = false
+    passwordStep.value = true
+  } if (step === 'last') {
+    passwordStep.value = false
+    lastStep.value = true
+  }
 }
+
 const toggleRole = (value: 'recruteur' | 'talent'): void => {
-  console.log('Role selected:', value)
   globalStore.setRole(value)
+  console.log('Role selected:', value)
 }
 
 onMounted(() => {
@@ -133,8 +187,8 @@ onMounted(() => {
   
 }
 
-.login-container {
-  width: 500px;
-  height: 400px;
+.p-error {
+  color: #e24c4c;
+  font-size: 0.875rem;
 }
 </style>

@@ -1,9 +1,10 @@
 <template>
-  <footer class="fixed bottom-0 left-0 w-full flex items-center justify-between px-6 py-4 bg-transparent">
-    <!-- App Name / Title -->
-    <div class="hidden sm:block text-2xl font-bold text-gray-800">Terms And conditions</div>
-
-    <!-- Logo on Right -->
+  <footer class="hidden sm:flex fixed bottom-0 left-0 w-full items-center justify-between px-12 py-4 bg-transparent">
+    <p class="text-white text-sm">© 2024 Shango. All rights reserved.</p>
+    <div class="hidden sm:flex items-center gap-12">
+      <p class="text-white text-sm">Termes et conditions</p>
+      <p class="text-white text-sm">Politiques de confidentialité</p>
+    </div>
   </footer>
 </template>
 

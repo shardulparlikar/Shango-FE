@@ -15,6 +15,7 @@ const routes: RouteRecordRaw[] = [
     path: '/signUp',
     name: 'signUp',
     component: SignUp,
+    meta: { hideHeaderAction: false }
   },
   // Recruiter routes
   {

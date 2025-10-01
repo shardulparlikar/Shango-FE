@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-center items-center min-h-screen p-4">
-    <Card class="w-full max-w-md p-6 rounded-2xl">
+  <div class="flex justify-center items-center login-container">
+    <Card class="w-full rounded-2xl w-full">
       <template #title>
         <div class="flex items-center mb-4">
           <Button icon="pi pi-arrow-left" class="p-button-text mr-2" @click="goBack" />
@@ -9,26 +9,25 @@
       </template>
 
       <template #content>
-        <p class="text-gray-600 mb-6 text-sm">
-          Entrez le code de vérification à six (06) chiffres a été envoyé à 
-          <span class="font-medium">{{ props.email }}</span>
-        </p>
-
-        <div class="mb-4">
-          <InputOtp
-            v-model="otp"
-            :length="6"
-            separator=" "
-            input-style="width: 3rem; height: 3rem; text-align: center; font-size: 1.25rem;"
-          />
+        <div class="mx-4">
+          <p class="text-gray-600 mb-6 text-sm">
+            Entrez le code de vérification à six (06) chiffres a été envoyé à
+            <span class="font-medium">{{ props.email }}</span>
+          </p>
+          <div class="mb-4">
+            <InputOtp
+              v-model="otp"
+              :length="6"
+              separator=" "
+              input-style="text-align: center; font-size: 1.25rem;"
+            />
+          </div>
+          <div class="flex justify-between items-center mb-6 text-sm text-gray-500">
+            <span>⏱ Renvoyer dans {{ countdown }}s</span>
+            <Button label="Renvoyer" class="p-button-text p-button-sm" @click="resendOtp" :disabled="countdown > 0" />
+          </div>
+          <Button label="Vérifier" class="w-full p-button-warning " @click="verifyOtp" />
         </div>
-
-        <div class="flex justify-between items-center mb-6 text-sm text-gray-500">
-          <span>⏱ Renvoyer dans {{ countdown }}s</span>
-          <Button label="Renvoyer" class="p-button-text p-button-sm" @click="resendOtp" :disabled="countdown > 0" />
-        </div>
-
-        <Button label="Vérifier" class="w-full p-button-warning" @click="verifyOtp" />
       </template>
     </Card>
   </div>
