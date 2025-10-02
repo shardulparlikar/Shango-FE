@@ -8,14 +8,18 @@
 
   <!-- Logo always visible -->
   <img src="../assets/images/logo.png" alt="Logo" class="hidden sm:block h-10 w-auto" />
-  <img src="../assets/images/LogoDark.png" alt="Logo Dark" class="block sm:hidden h-10 w-auto mx-auto" />
+  <img src="../assets/images/LogoDark.png" alt="Logo Dark" class="block sm:hidden h-12 w-auto mx-auto mt-4" v-if="isRecruiter" />
+  <img src="../assets/images/talentLogo.png" alt="Logo Dark" class="block sm:hidden h-12 w-auto mx-auto mt-4" v-else />
 </header>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useGlobalStore } from '../store/globalStore'
 const route = useRoute()
+const globalStore = useGlobalStore()
 const hideHeader = computed(() => route.meta.hideHeaderAction === true)
+const isRecruiter = computed(() => globalStore.isRecruiter)
 </script>
 

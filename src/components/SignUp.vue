@@ -1,14 +1,14 @@
 <template>
-  <div :class="['background', isRecruiter ? 'bg-recruiter' : 'bg-talent']">
+  <div class="flex justify-end sm:items-center items-start sm:mt-0 mt-32" :class="['background', isRecruiter ? 'bg-recruiter' : 'bg-talent']">
     <!-- <div class="login-container flex items-center"> -->
       <!-- Email Step -->
       <div v-if="emailStep" class="login-container">
         <Card class="bg-white rounded-2xl w-full">
           <template #title>
-            <h2 class="text-2xl font-semibold flex justify-center mb-4 p-4">Créer un compte</h2>
+            <h2 class="text-2xl font-bold flex justify-center text-black mb-4 mt-4">Créer un compte</h2>
           </template>
           <template #content>
-            <div class="flex justify-center mb-4 p-4">
+            <div class="flex justify-center px-4">
               <SelectButton
                 v-model="toggleValue"
                 :options="toggleOptions"
@@ -18,9 +18,9 @@
                 @update:modelValue="toggleRole"
               />
             </div>
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4 p-6">
               <div>
-                <label for="email" class="block text-sm font-medium text-gray-400 mb-3">
+                <label for="email" class="block med-text mb-6">
                   Veuillez entrer votre adresse e-mail pour créer votre compte.
                 </label>
                 <InputText
@@ -45,6 +45,10 @@
               >
                 Suivant
               </Button>
+
+              <label for="email" class="med-text flex justify-center">
+                Vous avez déjà un compte ? <span class="text-primary ml-2">Se connecter</span>
+              </label>
             </div>
           </template>
         </Card>
@@ -163,13 +167,10 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .background {
   width: 100vw;
   height: 100vh;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
   padding-right: 5rem;
 }
 
@@ -203,5 +204,41 @@ onMounted(() => {
 .p-error {
   color: #e24c4c;
   font-size: 0.875rem;
+}
+:deep() {
+  .p-selectbutton {
+    border: 1px solid #E2E8F0;
+    border-radius: 9999px;
+    padding: 2px;
+    background: white;
+    overflow: hidden;
+  }
+  
+  .p-togglebutton {
+    border: none !important;
+    border-radius: 9999px !important;
+    padding: 0.6rem 1.7rem;
+    background-color: white;
+  }
+  .p-togglebutton .p-togglebutton-content {
+    padding: 0;
+  }
+  .p-selectbutton .p-togglebutton:first-child {
+    border-radius: 9999px 0 0 9999px; /* left side pill */
+  }
+
+  .p-selectbutton .p-togglebutton:last-child {
+    border-radius: 0 9999px 9999px 0; /* right side pill */
+  }
+  .p-togglebutton-checked {
+    background: var(--p-primary-color) !important;
+    color: white !important;
+    .p-togglebutton-content {
+      background: var(--p-primary-color) !important;
+    } 
+  }
+  // .p-togglebutton-label { 
+  //   color: #94A3B8;
+  // }
 }
 </style>
