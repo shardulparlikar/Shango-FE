@@ -38,8 +38,10 @@
               <Button 
                 label="Suivant" 
                 class="w-full mt-2" 
-                :onClick="handleNext"
-                :disabled="!isEmailValid"
+                @click="handleNext"
+                :loading="isSendEmailLoading"
+                type="button"
+                loadingIcon="pi pi-search"
               >
                 Suivant
               </Button>
@@ -68,6 +70,8 @@ import PasswordManager from './PasswordManager.vue'
 import ThankYouPage from './ThankYouPage.vue'
 import { useGlobalStore } from '../store/globalStore'
 import { authService } from '../services/authServices'
+import { useToast } from "primevue/usetoast"
+const toast = useToast()
 
 const globalStore = useGlobalStore()
 
@@ -87,6 +91,7 @@ const emailStep = ref<boolean>(true)
 const otpStep = ref<boolean>(false)
 const passwordStep = ref<boolean>(false)
 const lastStep = ref<boolean>(false)
+const isSendEmailLoading = ref<boolean>(false)
 
 const isRecruiter = computed<boolean>(() => toggleValue.value === 'recruteur')
 
@@ -110,11 +115,19 @@ const emailError = computed<string>(() => {
 const handleNext = async () => {
   emailTouched.value = true
   if (isEmailValid.value) {
-    const res = await authService.login({ contact: email.value })
-    setStep('otp')
+    isSendEmailLoading.value = true
+    try {
+      const res = await authService.sendOtp({ contact: email.value })
+      toast.add({ severity: 'success', summary: 'Success Message', detail: res?.data?.message || 'OTP sent to you email', life: 3000 })
+      setStep('otp')
+    } catch (error: any) {
+      console.error('Error sending email:', error?.response?.data?.message )
+      toast.add({ severity: 'error', summary: 'Success Message', detail: error?.response?.data?.message || 'Something went wrong', life: 3000 })
+    } finally {
+      isSendEmailLoading.value = false
+    }
   }
 }
-
 const setStep = (step: 'email' | 'otp' | 'password' | 'last'): void => {
   // reset all steps first
   emailStep.value = false

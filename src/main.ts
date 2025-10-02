@@ -5,6 +5,7 @@ import App from './App.vue'
 import PrimeVue from 'primevue/config'
 import Aura from '@primeuix/themes/aura'
 import { definePreset } from '@primeuix/themes';
+import ToastService from 'primevue/toastservice'
 
 
 const customTheme = definePreset(Aura, {
@@ -38,6 +39,7 @@ app.use(PrimeVue, {
     }
   }
 })
+app.use(ToastService)
 
 app.use(pinia)
 app.use(router)

@@ -7,12 +7,16 @@ const api = axios.create({
     timeout: 10000,
 })
 
+
+// Return type: Promise generic
+export type ApiResponse<T = any> = Promise<T>;
+
 export function commonApiMethod(
     url: string,
     method: Method,
     data?: any,
     config?: AxiosRequestConfig
-) {
+): ApiResponse {
     return api.request({
         url,
         method,

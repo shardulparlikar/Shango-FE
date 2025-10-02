@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Toast  position="bottom-right"/>
     <!-- Main placeholder for all routed components -->
     <AppHeader/>
     <router-view />
@@ -14,6 +15,7 @@ import { usePreset, definePreset } from '@primeuix/themes'
 import Aura from '@primeuix/themes/aura'
 import { watch, computed } from 'vue'
 import { useGlobalStore } from './store/globalStore'
+import Toast from 'primevue/toast';
 const globalStore = useGlobalStore()
 
 // No JS needed unless you want programmatic navigation

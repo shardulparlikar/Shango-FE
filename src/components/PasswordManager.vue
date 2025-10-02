@@ -52,7 +52,8 @@
           class="w-full p-button-warning"
           :disabled="!isFormValid"
           @click="submitPassword"
-        />
+          :loading="loading"
+          />
       </template>
     </Card>
   </div>
@@ -63,6 +64,11 @@ import { ref, computed } from 'vue'
 import Card from 'primevue/card'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
+import { authService } from '../services/authServices'
+import { useToast } from "primevue/usetoast"
+import { useGlobalStore } from '../store/globalStore'
+const globalStore = useGlobalStore()
+const toast = useToast()
 
 
 const props = defineProps<{
@@ -76,6 +82,7 @@ const emit = defineEmits<{
 // State
 const password = ref('')
 const confirmPassword = ref('')
+const loading = ref(false)
 
 // Validations
 const isMinLength = computed(() => password.value.length >= 12)
@@ -97,12 +104,32 @@ const containsEmailOrName = computed(() => {
     (props.email && lowerPass.includes(props.email.toLowerCase()))
   )
 })
+const userRole = computed(() => globalStore.getSelectedRole)
+const payload = computed(() => ({
+  email: props.email,
+  password: password.value,
+  userType: userRole.value === 'recruteur' ? 'recruiter' : 'talent'
+}))
 
 // Submit
-const submitPassword = () => {
-  if (isFormValid.value) {
-    emit('onSubmit')
+const submitPassword = async () => {
+  if (!isFormValid.value) {
+    toast.add({ severity: 'wan', detail: 'Please complete requested fields', life: 3000 })
+    return
   }
+  loading.value = true
+  try {
+    const res = await authService.registerUser(payload.value)
+    toast.add({ severity: 'success', summary: 'Success Message', detail: res?.data?.message || 'Password set successfully', life: 3000 })
+  } catch (error: any) {
+    console.error('Error setting password:', error?.response?.data?.message )
+    toast.add({ severity: 'error', summary: 'Error Message', detail: error?.response?.data?.message || 'Something went wrong', life: 3000 })
+    return
+  }
+  finally {
+    loading.value = false
+  }
+  emit('onSubmit')
 }
 </script>
 
