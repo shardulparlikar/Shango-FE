@@ -12,7 +12,7 @@ const routes: RouteRecordRaw[] = [
     component: Login,
   },
   {
-    path: '/signUp',
+    path: '/signup',
     name: 'signUp',
     component: SignUp,
     meta: { hideHeaderAction: false }

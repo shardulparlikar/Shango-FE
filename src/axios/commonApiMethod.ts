@@ -3,7 +3,7 @@ import axios from 'axios'
 import type { Method, AxiosRequestConfig } from 'axios'
 
 const api = axios.create({
-    baseURL: 'https://api.develop.shangomyworld.com', // your backend URL
+    baseURL: import.meta.env.VITE_API_DOMAIN, // your backend URL
     timeout: 10000,
 })
 
