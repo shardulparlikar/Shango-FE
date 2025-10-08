@@ -1,10 +1,10 @@
 <template>
-  <div class="flex justify-end sm:items-center items-start sm:mt-0 mt-32" :class="['background', isRecruiter ? 'bg-recruiter' : 'bg-talent']">
+  <div class="flex justify-end sm:items-center items-start sm:mt-0" :class="['background', isRecruiter ? 'bg-recruiter' : 'bg-talent']">
     <!-- <div class="login-container flex items-center"> -->
       <!-- Email Step -->
       <div v-if="emailStep" class="login-container">
         <Card class="bg-white rounded-2xl w-full">
-          <template #title>
+          <template #title v-if="!isMobile">
             <h2 class="text-2xl font-bold flex justify-center text-black mb-4 mt-4">Créer un compte</h2>
           </template>
           <template #content>
@@ -18,7 +18,7 @@
                 @update:modelValue="toggleRole"
               />
             </div>
-            <div class="flex flex-col gap-4 p-6">
+            <div class="flex flex-col gap-4 p-0 sm:p-6 mt-12 sm:mt-0">
               <div>
                 <label for="email" class="block med-text mb-6">
                   Veuillez entrer votre adresse e-mail pour créer votre compte.
@@ -47,7 +47,7 @@
               </Button>
 
               <label for="email" class="med-text flex justify-center">
-                Vous avez déjà un compte ? <span class="text-primary ml-2">Se connecter</span>
+                Vous avez déjà un compte ? <span class="text-primary ml-1">Se connecter</span>
               </label>
             </div>
           </template>
@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, onUnmounted } from 'vue'
 import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
@@ -87,10 +87,7 @@ type ToggleOption = {
 const email = ref<string>('')
 const emailTouched = ref<boolean>(false)
 const toggleValue = ref<'recruteur' | 'talent'>('recruteur')
-const toggleOptions = ref<ToggleOption[]>([
-  { label: 'Je suis un recruteur', value: 'recruteur' },
-  { label: 'Je suis un talent', value: 'talent' }
-])
+
 const emailStep = ref<boolean>(true)
 const otpStep = ref<boolean>(false)
 const passwordStep = ref<boolean>(false)
@@ -98,6 +95,7 @@ const lastStep = ref<boolean>(false)
 const isSendEmailLoading = ref<boolean>(false)
 
 const isRecruiter = computed<boolean>(() => toggleValue.value === 'recruteur')
+const isMobile = ref<boolean>(window.innerWidth <= 640)
 
 // Email validation
 const isEmailValid = computed<boolean>(() => {
@@ -105,6 +103,22 @@ const isEmailValid = computed<boolean>(() => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return emailRegex.test(email.value)
 })
+const toggleOptions = computed<ToggleOption[]>(() => {
+  if (isMobile.value) {
+    return [
+      { label: 'Recruteur', value: 'recruteur' },
+      { label: 'Talent', value: 'talent' }
+    ]
+  }
+  return [
+    { label: 'Je suis un recruteur', value: 'recruteur' },
+    { label: 'Je suis un talent', value: 'talent' }
+  ]
+})
+
+const updateIsMobile = () => {
+  isMobile.value = window.innerWidth <= 640
+}
 
 const emailError = computed<string>(() => {
   if (!email.value) {
@@ -126,7 +140,7 @@ const handleNext = async () => {
       setStep('otp')
     } catch (error: any) {
       console.error('Error sending email:', error?.response?.data?.message )
-      toast.add({ severity: 'error', summary: 'Success Message', detail: error?.response?.data?.message || 'Something went wrong', life: 3000 })
+      toast.add({ severity: 'error', summary: 'Error', detail: error?.response?.data?.message || 'Something went wrong', life: 3000 })
     } finally {
       isSendEmailLoading.value = false
     }
@@ -164,7 +178,12 @@ const toggleRole = (value: 'recruteur' | 'talent'): void => {
 onMounted(() => {
   // Initialize the global store role
   globalStore.setRole(toggleValue.value)
+  window.addEventListener('resize', updateIsMobile)
 })
+onUnmounted(() => {
+  window.removeEventListener('resize', updateIsMobile)
+})
+
 </script>
 
 <style scoped lang="scss">
@@ -193,14 +212,18 @@ onMounted(() => {
     background-image: none !important; /* Remove background on mobile */
     padding-right: 1rem; /* reduce padding for mobile */
     justify-content: center; /* center the card */
+    padding-top: 7rem;
   }
   .login-container {
-    width: 90%; /* make card almost full width */
-    height: auto; /* adapt height */
+    width: 90%;
+    height: auto;
   }
-  
+  :deep(.p-togglebutton) {
+    padding: 0.7rem 3.5rem !important;
+    font-size: 0.875rem !important;
+    text-align: left;
+  }
 }
-
 .p-error {
   color: #e24c4c;
   font-size: 0.875rem;
@@ -219,14 +242,16 @@ onMounted(() => {
     border-radius: 9999px !important;
     padding: 0.6rem 1.7rem;
     background-color: white;
+    justify-content: center;
+    justify-items: center;
   }
   .p-togglebutton .p-togglebutton-content {
     padding: 0;
+     box-shadow: none !important;
   }
   .p-selectbutton .p-togglebutton:first-child {
     border-radius: 9999px 0 0 9999px; /* left side pill */
   }
-
   .p-selectbutton .p-togglebutton:last-child {
     border-radius: 0 9999px 9999px 0; /* right side pill */
   }
@@ -237,8 +262,6 @@ onMounted(() => {
       background: var(--p-primary-color) !important;
     } 
   }
-  // .p-togglebutton-label { 
-  //   color: #94A3B8;
-  // }
 }
+
 </style>

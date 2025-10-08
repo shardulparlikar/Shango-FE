@@ -8,8 +8,8 @@
 
   <!-- Logo always visible -->
   <img src="../assets/images/logo.png" alt="Logo" class="hidden sm:block h-10 w-auto" />
-  <img src="../assets/images/LogoDark.png" alt="Logo Dark" class="block sm:hidden h-12 w-auto mx-auto mt-4" v-if="isRecruiter" />
-  <img src="../assets/images/talentLogo.png" alt="Logo Dark" class="block sm:hidden h-12 w-auto mx-auto mt-4" v-else />
+  <img src="../assets/images/LogoDark.png" alt="Logo Dark" class="block sm:hidden h-7 w-auto mx-auto mt-6" v-if="isRecruiter" />
+  <img src="../assets/images/talentLogo.png" alt="Logo Dark" class="block sm:hidden h-7 w-auto mx-auto mt-6" v-else />
 </header>
 </template>
 

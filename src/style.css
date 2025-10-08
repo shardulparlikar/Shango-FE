@@ -23,6 +23,15 @@
 .text-primary {
   color: var(--p-primary-color);
 }
+.header-font {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 150%;
+  letter-spacing: -1%;
+}
+.black-color {
+  color: #020617;
+}
 
 body {
   margin: 0;

@@ -1,18 +1,18 @@
 <template>
   <div class="flex justify-center items-center login-container">
-    <Card class="w-full rounded-2xl w-full">
+    <Card class="w-full rounded-2xl py-2">
       <template #title>
         <div class="flex items-center mb-4">
-          <Button icon="pi pi-arrow-left" class="p-button-text mr-2" @click="goBack" />
-          <h2 class="text-lg font-semibold">Code de vérification</h2>
+          <Button icon="pi pi-arrow-left" class="p-button-text mr-2 black-color" @click="goBack" />
+          <h2 class="header-font black-color">Code de vérification</h2>
         </div>
       </template>
 
       <template #content>
         <div class="mx-4">
-          <p class="text-gray-600 mb-6 text-sm">
+          <p class="text-col mb-6 text-sm">
             Entrez le code de vérification à six (06) chiffres a été envoyé à
-            <span class="font-medium">{{ props.email }}</span>
+            <span class="font-bold">{{ props.email }}</span>
           </p>
           <div class="mb-4">
             <InputOtp
@@ -20,6 +20,7 @@
               :length="6"
               separator=" "
               input-style="text-align: center; font-size: 1.25rem;"
+              :class="{ error: hasOtpError }"
             />
             <p v-if="errorMessage" class="text-red-500 text-xs mt-2">{{ errorMessage }}</p>
           </div>
@@ -60,6 +61,7 @@ const countdown = ref(60)
 let timer: number | undefined
 const errorMessage = ref('')
 const loading  = ref(false)
+const hasOtpError = ref(false)
 
 const startCountdown = () => {
   countdown.value = 60
@@ -91,6 +93,7 @@ const validateOtp = (): boolean => {
     return false
   }
   errorMessage.value = ''
+  hasOtpError.value = false
   return true
 }
 
@@ -103,9 +106,11 @@ const verifyOtp = async () => {
   } catch (error: any) {
     console.error('Error verifying OTP:', error?.response?.data?.message )
     toast.add({ severity: 'error', summary: 'Error Message', detail: error?.response?.data?.message || 'Invalid OTP', life: 3000 })
+    errorMessage.value = 'Le code OTP est incorrect.'
+    hasOtpError.value = true
     return
   }
-  loading.value = true
+  loading.value = false
   emit('onNext', otp.value)
 }
 
@@ -119,9 +124,46 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Optional: Customize OTP inputs further */
-.p-input-otp input {
-  border-radius: 5rem;
-  border: 1px solid #d1d5db; /* gray-300 */
+.text-col {
+  color: #334155;
+}
+
+:deep(.p-inputotp-input) {
+  width: 52px;
+  height: 52px;
+  font-size: 1.25rem;
+  text-align: center;
+  padding: 0;
+  border-radius: 8px;
+  border: 1.5px solid #1E293B;
+}
+
+:deep(.p-inputotp) {
+  gap: 20px;
+}
+:deep(.p-inputotp.error .p-inputotp-input) {
+  border-color: #ef4444;
+}
+
+@media (max-width: 640px) {
+  :deep(.p-inputotp-input) {
+    width: 45px;
+    height: 45px;
+    font-size: 1.125rem;
+  }
+
+  :deep(.p-inputotp) {
+    gap: 8px;
+  }
+
+  :deep(.p-card) {
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+  :deep(.p-card-body){
+    padding: 0;
+  }
 }
 </style>
+

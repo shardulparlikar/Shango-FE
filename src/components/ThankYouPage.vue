@@ -1,15 +1,12 @@
 <template>
   <div class="flex justify-center login-container ">
-    <Card class="w-full max-w-md rounded-2xl shadow-lg h-full justify-end">
+    <Card class="w-full max-w-md rounded-2xl shadow-lg h-full justify-end sm:mt-0 mt-48">
       <template #content>
         <div class="flex flex-col items-center text-center space-y-6">
           <!-- Success Icon -->
-          <div class="relative flex items-center justify-center">
-            <i
-              class="pi pi-check-circle text-green-500"
-              style="font-size: 4rem"
-            ></i>
-          </div>
+          <!-- <div class=""> -->
+            <div class="flex items-center justify-center bg-thank-you"></div>
+          <!-- </div> -->
 
           <!-- Text -->
           <div>
@@ -47,15 +44,11 @@ const role = computed(() => globalStore.isRecruiter ? 'Recruteur' : 'Talent')
 </script>
 
 <style scoped>
-/* Animation for dots */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scale(0.8);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
+.bg-thank-you {
+  background-image: url('../assets/images/confirmImage.png');
+  background-size: cover;
+  background-position: center;
+  height: 10rem;
+  width: 100%;
 }
 </style>

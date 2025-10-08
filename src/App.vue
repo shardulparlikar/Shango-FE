@@ -77,4 +77,14 @@ body {
   margin: 0;
   padding: 0;
 }
+@media (max-width: 640px) {
+  :deep(.p-card) {
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+  :deep(.p-card-body){
+    padding: 0;
+  }
+}
 </style>
