@@ -1,9 +1,10 @@
 <template>
-  <h1>{{ msg }}</h1>
+  <div>
+    <h2>login</h2>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 
-const msg = ref('Login')
+
 </script>

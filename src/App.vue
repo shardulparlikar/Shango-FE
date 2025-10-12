@@ -13,7 +13,7 @@ import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
 import { usePreset, definePreset } from '@primeuix/themes'
 import Aura from '@primeuix/themes/aura'
-import { watch, computed } from 'vue'
+import { watch, computed, onMounted } from 'vue'
 import { useGlobalStore } from './store/globalStore'
 import Toast from 'primevue/toast';
 const globalStore = useGlobalStore()
@@ -68,6 +68,17 @@ const RecruiterTheme = definePreset(Aura, {
       usePreset(TalentTheme)
     }
   } )
+
+  // Fetch location
+onMounted(async () => {
+  try {
+    const res = await fetch('https://ipapi.co/json/')
+    const data = await res.json()
+    globalStore.$patch({userCountry: data.country_name, userRegion: data.continent_code})
+  } catch (err) {
+    console.error('Failed to get location:', err)
+  }
+})
 </script>
 
 <style scoped>

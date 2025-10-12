@@ -1,5 +1,7 @@
 <template>
-  <div class="flex justify-end sm:items-center items-start sm:mt-0" :class="['background', isRecruiter ? 'bg-recruiter' : 'bg-talent']">
+  <div
+    class="flex justify-end sm:items-center items-start sm:mt-0 background"
+    :style="{ backgroundImage: `url(${backgroundImage})` }">
     <!-- <div class="login-container flex items-center"> -->
       <!-- Email Step -->
       <div v-if="emailStep" class="login-container">
@@ -96,6 +98,7 @@ const isSendEmailLoading = ref<boolean>(false)
 
 const isRecruiter = computed<boolean>(() => toggleValue.value === 'recruteur')
 const isMobile = ref<boolean>(window.innerWidth <= 640)
+const currentRegion = computed<string>(() => globalStore.getUserRegion)
 
 // Email validation
 const isEmailValid = computed<boolean>(() => {
@@ -128,6 +131,17 @@ const emailError = computed<string>(() => {
     return 'Veuillez entrer une adresse e-mail valide'
   }
   return ''
+})
+const backgroundImage = computed(() => {
+  const region = currentRegion.value || 'default'
+  const role = isRecruiter.value ? 'recruiter' : 'talent'
+  console.log(new URL(`../assets/images/${role}/${region}.png`, import.meta.url).href)
+  console.log(region)
+  try {
+    return new URL(`../assets/images/${role}/${region}.png`, import.meta.url).href
+  } catch (e) {
+    return new URL(`../assets/images/${role}/default.png`, import.meta.url).href
+  }
 })
 
 const handleNext = async () => {
@@ -190,6 +204,8 @@ onUnmounted(() => {
 .background {
   width: 100vw;
   height: 100vh;
+  background-size: cover;
+  background-position: center;
   padding-right: 5rem;
 }
 
