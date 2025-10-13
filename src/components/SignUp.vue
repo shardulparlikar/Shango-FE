@@ -18,6 +18,7 @@
                 optionLabel="label"
                 optionValue="value"
                 @update:modelValue="toggleRole"
+                data-testId="toggle-button"
               />
             </div>
             <div class="flex flex-col gap-4 p-0 sm:p-6 mt-12 sm:mt-0">
@@ -32,6 +33,7 @@
                   type="email"
                   :class="{ 'p-invalid': emailError && emailTouched }"
                   @blur="emailTouched = true"
+                  data-testId="email-input"
                 />
                 <small v-if="emailError && emailTouched" class="p-error block mt-2">
                   {{ emailError }}
@@ -44,6 +46,7 @@
                 :loading="isSendEmailLoading"
                 type="button"
                 loadingIcon="pi pi-search"
+                data-testId="submit-button"
               >
                 Suivant
               </Button>

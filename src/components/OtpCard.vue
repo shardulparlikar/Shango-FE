@@ -3,7 +3,7 @@
     <Card class="w-full rounded-2xl py-2">
       <template #title>
         <div class="flex items-center mb-4">
-          <Button icon="pi pi-arrow-left" class="p-button-text mr-2 black-color" @click="goBack" />
+          <Button icon="pi pi-arrow-left" class="p-button-text mr-2 black-color" @click="goBack" data-testid="back-button" />
           <h2 class="header-font black-color">Code de vérification</h2>
         </div>
       </template>
@@ -21,14 +21,15 @@
               separator=" "
               input-style="text-align: center; font-size: 1.25rem;"
               :class="{ error: hasOtpError }"
+              data-testid="otp-input"
             />
             <p v-if="errorMessage" class="text-red-500 text-xs mt-2">{{ errorMessage }}</p>
           </div>
           <div class="flex justify-between items-center mb-6 text-sm text-gray-500">
             <span>⏱ Renvoyer dans {{ countdown }}s</span>
-            <Button label="Renvoyer" class="p-button-text p-button-sm" @click="resendOtp" :disabled="countdown > 0" :loading="loading"/>
+            <Button label="Renvoyer" class="p-button-text p-button-sm" @click="resendOtp" :disabled="countdown > 0" :loading="loading" data-testid="resend-button"/>
           </div>
-          <Button label="Vérifier" class="w-full p-button-warning " @click="verifyOtp" :loading="loading" />
+          <Button label="Vérifier" class="w-full p-button-warning " @click="verifyOtp" :loading="loading" data-testid="verify-button"/>
         </div>
       </template>
     </Card>
@@ -103,6 +104,7 @@ const verifyOtp = async () => {
   try {
     const res = await authService.verifyOtp({ contact: props.email, otp: otp.value })
     toast.add({ severity: 'success', summary: 'Success Message', detail: res?.data?.message || 'OTP verified successfully', life: 3000 })
+    emit('onNext', otp.value)
   } catch (error: any) {
     console.error('Error verifying OTP:', error?.response?.data?.message )
     toast.add({ severity: 'error', summary: 'Error Message', detail: error?.response?.data?.message || 'Invalid OTP', life: 3000 })
@@ -110,8 +112,9 @@ const verifyOtp = async () => {
     hasOtpError.value = true
     return
   }
-  loading.value = false
-  emit('onNext', otp.value)
+  finally {
+    loading.value = false
+  }
 }
 
 const goBack = () => {
